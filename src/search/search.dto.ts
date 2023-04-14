@@ -21,6 +21,7 @@ export class SearchDTO {
     @Transform(({value}) => value.trim())
     stateName: string;
 
+    @IsOptional()
     @Type(() => Availability)
     @Validate(AvailabilityObject)
     availability: Availability 

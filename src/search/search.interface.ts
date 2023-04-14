@@ -1,10 +1,13 @@
+type DENTAL = "DENTAL";
+type VET = "VET";
+
 export interface IAvailability {
   from: string;
   to: string;
 }
 
 export interface IClinicData {
-  clincType: String;
+  clincType: DENTAL | VET;
   name: String;
   stateName: String;
   availability: IAvailability
