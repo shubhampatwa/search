@@ -14,15 +14,15 @@ export class SearchDTO {
     @IsString()
     @IsOptional()
     @Transform(({value}) => value.trim())
-    name: string;
+    name?: string;
 
     @IsString()
     @IsOptional()
     @Transform(({value}) => value.trim())
-    stateName: string;
+    stateName?: string;
 
     @IsOptional()
     @Type(() => Availability)
     @Validate(AvailabilityObject)
-    availability: Availability 
+    availability?: Availability 
 }

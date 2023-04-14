@@ -11,11 +11,12 @@ export class AvailabilityObject implements ValidatorConstraintInterface {
       return false;
     }
     if (availability.to) {
-      isValid &&= this.validateTime(availability.from);
+      isValid &&= this.validateTime(availability.to);
     } else {
       return false
     }
-    return isValid;
+
+    return isValid && this.compareTime(availability) ;
   }
 
   validateTime(time: string) {
@@ -26,8 +27,19 @@ export class AvailabilityObject implements ValidatorConstraintInterface {
     if (minutes < 0 && minutes > 59) {
       return false;
     }
+    
     return true;
   }
+
+  compareTime({from, to}: IAvailability) {
+    const [fromHour, fromMinutes] = from.trim().split(":").map(x => parseInt(x));
+    const [toHour, toMinutes] = to.trim().split(":").map(x => parseInt(x));
+    if (fromHour > toHour) return false;
+    if (fromHour === toHour && fromMinutes > toMinutes) return false;
+    return true
+  }
+
+  
 
   defaultMessage(): string {
     return 'Availabilty is not valid and please choose from and to key in frame of 0:00 - 23:59';
