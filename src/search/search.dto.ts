@@ -13,12 +13,12 @@ class Availability  {
 export class SearchDTO {
     @IsString()
     @IsOptional()
-    @Transform(({value}) => value.trim())
+    @Transform(({value}) => value.trim().toLowerCase())
     name?: string;
 
     @IsString()
     @IsOptional()
-    @Transform(({value}) => value.trim())
+    @Transform(({value}) => value.trim().toLowerCase())
     stateName?: string;
 
     @IsOptional()
