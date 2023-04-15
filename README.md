@@ -35,6 +35,7 @@ $ npm install
 ## Running the app
 
 ```bash
+cp .env.example .env
 # development
 $ npm run start
 
@@ -58,16 +59,67 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Simple, clear, readable code
+- How well structured it is? => Module level structure with controller service pair and remaining utils.
+- Clear separation of concerns? => Not needed.
+- Can anyone just look at it and get the idea to what is being done? => Yes, API => controller => Service (Basic).
+- Does it follow any standards? => dependency injection (Solid Property).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Correctness
+- Does the application do what it promises? Can we find bugs or trivial flaws?
+- Yes, It provides facility of search using three property which name, stateName and availability (all are optional).
+- Search by name and stateName only check if any subset matches from the Clinic Data and consider it in result if any matches.
+- URL and Query Params => `search?name=any&stateName=any&availability[from]=00:00&availability[to]=23:59`
+- To test the required, instead of mocking response in test, I tested controller and service with actual response of URLS. 
+
+
+## Security
+- Are there any obvious vulnerability? => Well not for now.
+
+
+## Memory efficiency
+- How will it behave in case of large datasets? => It totally depends on the way we want to handle which are as follow
+- Case #1: When dataset is small and fixed
+  - I save it in on initialization to save multiple API call on every search request and make the required functionality which works efficiently.
+
+- Case #2: When dataset is large  
+  - To get large dataset we need to have big system RAM, to store data without pagination.
+  - After we can store this data in Database, to make search efficient it will be tough to search on big dataset using JS only (linear search)
+  - In JS level, we need to add few algorithm of searching fast but that can be easily done by DB if we index it properly.
+  - In Db if we index table using name(separetely), stateName(separetely), availability(separetely), name & stateName(together), name & availability(together), stateName & availability(together) and name,stateName and availability(together) then we can deal very fast and efficiently over 100GB of data.
+
+- Case #3: When dataset is large and keep changing
+  - We can follow same like case #2, but to update data we need to go with cron to keep updating data perodically.
+
+
+## Testing
+- How well tested your application is? Can you give some metrics?
+
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |    78.7 |    68.96 |   88.46 |   77.27 |                   
+ src                   |       0 |      100 |       0 |       0 |                   
+  main.ts              |       0 |      100 |       0 |       0 | 1-14              
+ src/search            |    82.6 |    68.96 |      92 |   81.94 |                   
+  search.controller.ts |     100 |      100 |     100 |     100 |                   
+  search.dto.ts        |   83.33 |      100 |   33.33 |   83.33 | 16,21             
+  search.module.ts     |       0 |      100 |     100 |       0 | 1-10              
+  search.service.ts    |   97.22 |      100 |     100 |   96.29 | 20                
+  search.validation.ts |   75.86 |       50 |     100 |   72.72 | 11,16,25,28,38-39 
+ src/search/__test__   |     100 |      100 |     100 |     100 |                   
+  mocks.ts             |     100 |      100 |     100 |     100 |           
+
+## Documentation
+- Is the code self documented and it's easy to understand it by just reading?
+ - How code works =>
+  - Start server command => `npm start`
+  - Initialize server and its module (including search module)
+  - In which search api got initialized
+  - Which `/search` api available to use
+
+
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Author - [Shubham Patwa](https://github.com/shubhampatwa)
