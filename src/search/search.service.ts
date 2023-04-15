@@ -7,6 +7,8 @@ import { IAvailability, IAvailabilityMinutes, IClinicData, ISearchClinicData } f
 export class SearchService implements OnModuleInit {
 
   clinicData: ISearchClinicData[] = [];
+  dentalClinicUrl = "https://storage.googleapis.com/scratchpay-code-challenge/dental-clinics.json";
+  vetClinicUrl = "https://storage.googleapis.com/scratchpay-code-challenge/vet-clinics.json";
   async onModuleInit() {
     await this.setData();
   }
@@ -14,7 +16,6 @@ export class SearchService implements OnModuleInit {
   async setData() {
     try {
       this.clinicData = await this.getData();
-      console.log(this.clinicData, ">>>>>>>>")
     } catch (error) {
       await this.setData();
     }
@@ -22,7 +23,6 @@ export class SearchService implements OnModuleInit {
 
   async search(searchQuery: SearchDTO): Promise<IClinicData[]> {
     const {name, stateName, availability} = searchQuery;
-
     return this.clinicData.filter((clinic) => {
       if( name && clinic.name.indexOf(name) === -1 ) return false;
       if( stateName && clinic.stateName.indexOf(stateName) === -1 ) return false;
@@ -33,8 +33,8 @@ export class SearchService implements OnModuleInit {
 
   async getData(): Promise<ISearchClinicData[]> {
     const [rawDentalClinics, rawVetClinics] = await Promise.all([
-      fetch("https://storage.googleapis.com/scratchpay-code-challenge/dental-clinics.json"),
-      fetch("https://storage.googleapis.com/scratchpay-code-challenge/vet-clinics.json")
+      fetch(this.dentalClinicUrl),
+      fetch(this.vetClinicUrl)
   ]);
     const [dentalClinics, vetClinics] = await Promise.all([rawDentalClinics.json(), rawVetClinics.json()]);
     return [...dentalClinics.map((val) => ({
