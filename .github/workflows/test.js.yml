@@ -10,7 +10,6 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.9]
         node-version: [16.17.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
@@ -26,12 +25,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Use Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
       - run: npm ci
-      - run: cat src/jest/test.env > .env
       - run: npm run build --if-present
       - run: npm test
         env:
